@@ -13,7 +13,7 @@ from database import(
     delete_data
 )
 
-origins = ['https://localhost:3000']
+origins = "*"
 
 app.add_middleware(
     CORSMiddleware,

@@ -9,6 +9,7 @@ uvicorn = "*"
 motor = "*"
 selenium = "*"
 termcolor = "*"
+xlwt = "*"
 
 [dev-packages]
 

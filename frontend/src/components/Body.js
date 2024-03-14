@@ -3,7 +3,7 @@ import Summarize from './Summarize'
 
 const Body = () => {
   return (
-    <div className='h-screen flex justify-center relative'>
+    <div className='flex flex-col justify-center items-center'>
         <Summarize/>
     </div>
     

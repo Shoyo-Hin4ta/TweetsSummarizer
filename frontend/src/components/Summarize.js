@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import axios from "axios";
+import Results from './Results';
 
 const Summarize = () => {
 
@@ -31,11 +32,14 @@ const Summarize = () => {
 
 
   return (
-    <div className='border border-red-300 absolute top-36 w-4/5 flex flex-col items-center'>
+    <>
+    <div className='border border-red-300 mt-36 w-4/5 flex flex-col items-center'>
         <div className='text-4xl m-2 mb-9'>Get Tweets Summary</div>
         <input ref = {twitterUsername} className= "w-2/5 p-4 rounded-lg" type= "text" placeholder='Enter the twitter username'/>
         <button onClick={handleClick} className='m-2 bg-blue-400 p-3 w-32 rounded-lg mt-7'> Summarize ! </button>
     </div>
+    <Results/>
+    </>
   )
 }
 

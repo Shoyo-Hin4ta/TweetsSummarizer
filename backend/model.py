@@ -14,5 +14,5 @@ class Tweet(BaseModel):
 class Tweets(BaseModel):
     userName: str
     twitterUsername: str
-    numberOfTweets: int
+    # numberOfTweets: int
     tweetsList: List[Tweet]

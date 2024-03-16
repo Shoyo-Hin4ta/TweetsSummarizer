@@ -6,6 +6,8 @@ import Login from './components/Login';
 import { useEffect } from 'react';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from './utils/firebase';
+import appStore from './utils/appStore';
+import { Provider } from 'react-redux';
 
 function App() {
 
@@ -27,10 +29,12 @@ function App() {
   }, []);
 
   return (
-    <div className='bg-cyan-100 h-screen'>
-      <Header />
-      <Outlet />
-    </div>
+    <Provider store = {appStore}>
+      <div className='bg-cyan-100 h-screen'>
+        <Header />
+        <Outlet />
+      </div>
+    </Provider>
   );
 
 }

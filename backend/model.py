@@ -13,6 +13,6 @@ class Tweet(BaseModel):
 
 class Tweets(BaseModel):
     userName: str
-    twitterUsername: str
+    twitterUsername: List[str]
     # numberOfTweets: int
     tweetsList: List[Tweet]

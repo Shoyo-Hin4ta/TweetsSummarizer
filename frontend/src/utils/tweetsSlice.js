@@ -16,15 +16,22 @@ const tweetsSlice = createSlice({
         addSummary : (state, action) => {
             state.summaryData.push(action.payload);
         },
+        clearSummaryData : (state) => {
+            state.summaryData = []
+            state.summaryUsername = []
+        },
         addSummaryUsername : (state, action) => {
             state.summaryUsername.push(action.payload);
         },
         changeShowResults : (state,action) => {
             state.showResults = true
+        },
+        hideShowResults : (state, action) => {
+            state.showResults = false;
         }
     }
 });
 
-export const {addTweets, addSummary, changeShowResults, addSummaryUsername} = tweetsSlice.actions;
+export const {addTweets, addSummary, changeShowResults, addSummaryUsername, clearSummaryData, hideShowResults} = tweetsSlice.actions;
 
 export default tweetsSlice.reducer;

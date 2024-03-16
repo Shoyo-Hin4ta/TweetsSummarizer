@@ -5,6 +5,7 @@ import  { useDispatch, useSelector } from 'react-redux';
 import { addTweets, changeShowResults } from '../utils/tweetsSlice';
 import { addSummary,addSummaryUsername } from '../utils/tweetsSlice';
 import openAPI from '../utils/openAPI';
+import { auth } from '../utils/firebase';
 
 const Summarize = () => {
 
@@ -50,6 +51,7 @@ const Summarize = () => {
 
       console.log("summary added - state updated");
 
+      
 
       dispatch(changeShowResults());
   }

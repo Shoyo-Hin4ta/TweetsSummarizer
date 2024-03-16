@@ -29,6 +29,8 @@ class Tweet:
                 self.tweet_num_retweet = self.__get_tweet_num_retweet()
                 self.tweet_num_reply = self.__get_tweet_num_reply()
             
+                self.image_url = self.__get_image_url()
+
             except TypeError:
                 self.Ad.append(self.tweet)
                 sleep(1)
@@ -66,6 +68,9 @@ class Tweet:
 
     def get_num_reply(self) -> str:
         return self.tweet_num_reply
+    
+    def get_image_url(self) -> str:
+            return self.image_url
     
 
     def __get_first_tweet(self) -> WebElement:
@@ -164,3 +169,11 @@ class Tweet:
             var element = arguments[0];
             element.parentNode.removeChild(element);
             """, self.tweet)
+        
+    def __get_image_url(self) -> str:
+        try:
+            image_element = self.tweet.find_element(By.CSS_SELECTOR, "div[data-testid='tweetPhoto']")
+            image_url = image_element.find_element(By.CSS_SELECTOR, "img").get_attribute("src")
+            return image_url
+        except NoSuchElementException:
+            return ""

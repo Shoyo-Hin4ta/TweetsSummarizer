@@ -44,11 +44,6 @@ async def get_tweets(profile_tweets: str):
 @app.post("/api/get_tweets", response_model = Tweets)
 async def post_tweets(tweets:Tweets):
 
-    # Check if the 'TEXT' field is empty for each tweet and replace it with "Image"
-    for tweet in tweets.tweetsList:
-        if not tweet.Text:
-            tweet.Text = "Image"
-
     response = await add_data(tweets.dict())
     if response:
         return response

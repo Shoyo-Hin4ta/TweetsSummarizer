@@ -1,4 +1,4 @@
-import { Outlet, createBrowserRouter } from 'react-router-dom';
+import { Outlet, createBrowserRouter, useNavigate } from 'react-router-dom';
 import './index.css';
 import Body from "./components/Body";
 import Header from './components/Header';
@@ -7,20 +7,30 @@ import { useEffect } from 'react';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from './utils/firebase';
 import appStore from './utils/appStore';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
+import { addUser, removeUser } from './utils/userSlice';
+import { hideShowResults, clearSummaryData } from './utils/tweetsSlice';
+
 
 function App() {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/auth.user
-        const uid = user.uid;
-        // ...
-      } else {
+        // const uid = user.uid;
+        const { uid, email, displayName } = user;
+        dispatch(addUser({ uid, email, displayName }))
+        } else {
         // User is signed out
-        // ...
+        dispatch(removeUser());
+        dispatch(hideShowResults());
+        dispatch(clearSummaryData());
+        navigate("/");
       }
     });
 
@@ -29,12 +39,11 @@ function App() {
   }, []);
 
   return (
-    <Provider store = {appStore}>
       <div className='bg-cyan-100 h-screen'>
         <Header />
         <Outlet />
       </div>
-    </Provider>
+    
   );
 
 }

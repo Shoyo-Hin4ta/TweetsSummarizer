@@ -62,11 +62,19 @@ def profile_search(
 
         data["URL"] = tweet.get_url()
         data["Date"] = tweet.get_date()
-        data["Text"] = tweet.get_text()
+        text_data = tweet.get_text()
+        if text_data:
+            data["Text"] = text_data
+        else:
+            data["Text"] = "Image"
         data["Lang"] = tweet.get_lang()
         data["Likes"] = tweet.get_num_likes()
         data["Retweets"] = tweet.get_num_retweet()
         data["Replies"] = tweet.get_num_reply()
+
+        image_url = tweet.get_image_url()
+        if image_url:
+            data["ImageURL"] = image_url
 
         results.append(data)
 

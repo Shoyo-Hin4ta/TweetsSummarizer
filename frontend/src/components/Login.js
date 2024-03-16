@@ -1,13 +1,19 @@
 import React, { useRef, useState } from 'react'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from '../utils/firebase';
-
+import { useDispatch } from 'react-redux';
+import { addUser } from '../utils/userSlice';
+import { useNavigate } from 'react-router-dom';
+import { clearSummaryData, hideShowResults } from '../utils/tweetsSlice';
 
 const Login = () => {
 
     const email = useRef(null);
     const password = useRef(null);
     const name = useRef(null);
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [error, setError] = useState(null);
     const [createClicked, setCreateClicked] = useState(false);
@@ -30,7 +36,15 @@ const Login = () => {
                     displayName: name.current.value,
                   }).then(() => {
                     // Profile updated!
-                    // ...
+                    const {uid, email, displayName} = auth.currentUser;
+                    
+                    //make a call to update the database to update the email of the user.
+
+                    dispatch(addUser({uid, email, displayName}));
+                    dispatch(clearSummaryData());
+                    dispatch(hideShowResults());
+                    
+                    navigate("/")
                   }).catch((error) => {
                     // An error occurred
                     // ...
@@ -42,19 +56,31 @@ const Login = () => {
                 const errorMessage = error.message;
                 // ..
             });
+        }else{
+            signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                const {uid, email, displayName} = auth.currentUser;
+                    
+                //make a call to update the database to update the email of the user.
+
+                dispatch(addUser({uid, email, displayName}));
+                
+                navigate("/");
+                dispatch(clearSummaryData());
+                dispatch(hideShowResults());
+
+
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
         }
 
 
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-        });
+        
 
     }
 

@@ -25,6 +25,13 @@ function App() {
         // const uid = user.uid;
         const { uid, email, displayName } = user;
         dispatch(addUser({ uid, email, displayName }))
+
+        // const  getUserData() {
+        //   return axios.get('/user/12345');
+        // }
+
+
+
         } else {
         // User is signed out
         dispatch(removeUser());

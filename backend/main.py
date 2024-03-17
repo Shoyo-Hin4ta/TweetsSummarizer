@@ -1,8 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from index import scrape_tweets
-from model import Tweets
+from model import(
+    Tweets, 
+    UpdateTweets) 
 
 app = FastAPI()
 
@@ -10,7 +12,7 @@ app = FastAPI()
 from database import(
     add_data,
     fetch_all_data,
-    delete_data
+    create_user_helper
 )
 
 origins = "*"
@@ -27,6 +29,13 @@ app.add_middleware(
 def read_root():
     return {"Working":"YES"}
 
+@app.post("/api/create_user/{email}")
+async def create_user(email : str):
+    response = await create_user_helper(email)
+    if response:
+        return response
+    raise HTTPException(409, "User can't be created or already exists")
+
 @app.get("/api/get_tweets/{profile_tweets}")
 async def get_tweets(profile_tweets: str):
     try:
@@ -41,18 +50,27 @@ async def get_tweets(profile_tweets: str):
     except Exception as e:
         return {"error": str(e)}
     
-@app.post("/api/get_tweets", response_model = Tweets)
-async def post_tweets(tweets:Tweets):
+@app.put("/api/add_tweets", response_model = Tweets)
+async def post_tweets(tweet:UpdateTweets):
 
-    response = await add_data(tweets.dict())
+    response = await add_data(tweet.dict())
     if response:
         return response
     
     raise HTTPException(400, "Something went wrong")
 
-@app.delete("/api/get_tweets{profile}")
-async def delete_tweets(profile):
-    response = await delete_data(profile)
+# @app.delete("/api/delete_tweets/{email}")
+# async def delete_tweets(email):
+#     response = await delete_data(profile)
+#     if response:
+#         return "Successfully deleted the item"
+#     raise HTTPException(400, "Something went wrong")
+
+
+@app.get("/api/get_all_tweets/{email}")
+async def get_all_tweets(email : str):
+    response = await fetch_all_data(email)
     if response:
-        return "Successfully deleted the item"
+        return response
+
     raise HTTPException(400, "Something went wrong")

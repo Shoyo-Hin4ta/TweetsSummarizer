@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { clearSummaryData, hideShowResults } from '../utils/tweetsSlice';
+import axios from 'axios';
 
 const Login = () => {
 
@@ -43,7 +44,16 @@ const Login = () => {
                     dispatch(addUser({uid, email, displayName}));
                     dispatch(clearSummaryData());
                     dispatch(hideShowResults());
-                    
+                    axios.post('/user', {
+                        firstName: 'Fred',
+                        lastName: 'Flintstone'
+                      })
+                      .then(function (response) {
+                        console.log(response);
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
                     navigate("/")
                   }).catch((error) => {
                     // An error occurred
@@ -66,7 +76,7 @@ const Login = () => {
                 //make a call to update the database to update the email of the user.
 
                 dispatch(addUser({uid, email, displayName}));
-                
+
                 navigate("/");
                 dispatch(clearSummaryData());
                 dispatch(hideShowResults());

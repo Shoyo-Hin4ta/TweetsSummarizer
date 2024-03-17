@@ -20,6 +20,8 @@ const Summarize = () => {
 
   const btnStatus = useSelector(store => store.tweets.showResults);
 
+  const summaryData = useSelector(store => store.tweet.summaryData);
+
   const handleClick = async() => {
 
       const valueToSend = twitterUsername.current.value + "_5";
@@ -51,6 +53,15 @@ const Summarize = () => {
 
       console.log("summary added - state updated");
 
+      // if user is logged in
+
+     const response_from_db = await axios.post('http://localhost:8000/api/get_tweets/', {
+        email: auth.currentUser.email,
+        twitterUsername: twitterUsername.current.value,
+        tweetsList: summarizedData
+     });
+
+    
       
 
       dispatch(changeShowResults());
@@ -64,7 +75,7 @@ const Summarize = () => {
         <button onClick={handleClick} className='m-2 bg-blue-400 p-3 w-32 rounded-lg mt-7'> Summarize ! </button>
     </div>
     {console.log("reached till result box")}
-    {btnStatus && <Results twitterUsername = {twitterUsername.current.value} />}
+    {summaryData && <Results twitterUsername = {twitterUsername.current.value} />}
     </>
   )
 }

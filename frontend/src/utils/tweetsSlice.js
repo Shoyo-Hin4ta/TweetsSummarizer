@@ -4,14 +4,17 @@ import { createSlice } from "@reduxjs/toolkit";
 const tweetsSlice = createSlice({
     name : "tweets",
     initialState : {
-        showResults : false,
-        data : null,
+        isLoading : false,
         summaryData : [],
-        summaryUsername : []
+        summaryUsername : [],
+        createUser : false,
     },
     reducers : {
-        addTweets : (state, action) => {
-            state.data = action.payload;
+        setCreateUser : (state, action) => {
+            state.createUser = !state.createUser
+        },
+        setIsLoading : (state,action) => {
+            state.isLoading = action.payload
         },
         addSummary : (state, action) => {
             state.summaryData.push(action.payload);
@@ -23,15 +26,15 @@ const tweetsSlice = createSlice({
         addSummaryUsername : (state, action) => {
             state.summaryUsername.push(action.payload);
         },
-        changeShowResults : (state,action) => {
-            state.showResults = true
+        userSummaryData : (state,action) => {
+            state.summaryData = action.payload
         },
-        hideShowResults : (state, action) => {
-            state.showResults = false;
+        userTwitterUsername : (state,action) => {
+            state.summaryUsername = action.payload
         }
     }
 });
 
-export const {addTweets, addSummary, changeShowResults, addSummaryUsername, clearSummaryData, hideShowResults} = tweetsSlice.actions;
+export const {setCreateUser, setIsLoading, userSummaryData, userTwitterUsername, addSummary, addSummaryUsername, clearSummaryData} = tweetsSlice.actions;
 
 export default tweetsSlice.reducer;

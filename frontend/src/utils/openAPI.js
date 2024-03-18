@@ -16,8 +16,6 @@ const openAPI = async(text) => {
         ["user", "{input}"],
       ]);
       
-      
-      
       const llmChain = prompt.pipe(chatModel).pipe(outputParser);
       
       const out = await llmChain.invoke({

@@ -1,14 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { auth } from '../utils/firebase'
 import { signOut } from "firebase/auth";
-import { clearSummaryData } from '../utils/tweetsSlice';
+import { clearSummaryData, setCreateUser } from '../utils/tweetsSlice';
+import { LOGO } from '../utils/constant';
 
 const Header = () => {
 
+  const clickedStatus = useSelector(store => store.tweets.createUser);
+
+  const [backToBody, setBackToBody] = useState(false);
+
   const user = useSelector(store => store.user);
   const dispatch = useDispatch();
+
   const handleSignOut = () => {
       signOut(auth).then(() => {
           // Sign-out successful.
@@ -18,15 +24,23 @@ const Header = () => {
         // An error happened.
       });
   }
-  
-  console.log(user);
+
+  const handleClick = () => {
+    setBackToBody(!backToBody)
+  }
+
   return (
     <div className='w-screen h-20 bg-cyan-200 flex justify-between items-center'>
-        <div className='m-2'>Title/ Logo</div>
-        <div className='flex'>
-            <div className='m-2'><Link to= "/login">{user ? "Hi, " + user.displayName : "SignIn"}</Link></div>
-            {user && <div className='m-2 cursor-pointer' onClick={handleSignOut} >SignOut</div>}
-            <div className='m-2'>How's it done ?</div>
+        <div className='m-1'>
+          <img className = "h-28" src = {LOGO} alt = "logo" />
+        </div>
+        <div className='flex cursor-pointer'>
+          <div className='m-2 '>
+              <Link to="/login" onClick={handleClick} className='m-2'>
+                {user ? `Hi, ${user.displayName}` : (clickedStatus ? "Register" : "Sign In")}
+              </Link>
+              {backToBody && <Link to="/" className='m-2'>Home</Link>}
+          </div>
         </div>
         
     </div>

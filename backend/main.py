@@ -15,11 +15,12 @@ from database import(
     create_user_helper
 )
 
-origins = "*"
+# origins = "*"
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = origins,
+    allow_origins = ['*'],
     allow_credentials = True,
     allow_methods = ["*"],
     allow_headers = ["*"],
@@ -42,7 +43,7 @@ async def get_tweets(profile_tweets: str):
         name, tweets = profile_tweets.split('_')
         tweets = int(tweets)
 
-        data = scrape_tweets(name, tweets)
+        scrape_tweets(name, tweets)
 
         with open("../backend/files/temp.json", "r") as file:
             data = json.load(file)

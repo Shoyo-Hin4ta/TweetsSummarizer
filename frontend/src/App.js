@@ -6,11 +6,10 @@ import Login from './components/Login';
 import { useEffect } from 'react';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from './utils/firebase';
-import appStore from './utils/appStore';
-import { Provider, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addUser, removeUser } from './utils/userSlice';
-import { hideShowResults, clearSummaryData } from './utils/tweetsSlice';
-
+import { clearSummaryData, userSummaryData, userTwitterUsername } from './utils/tweetsSlice';
+import axios from 'axios';
 
 function App() {
 
@@ -26,16 +25,9 @@ function App() {
         const { uid, email, displayName } = user;
         dispatch(addUser({ uid, email, displayName }))
 
-        // const  getUserData() {
-        //   return axios.get('/user/12345');
-        // }
-
-
-
         } else {
         // User is signed out
         dispatch(removeUser());
-        dispatch(hideShowResults());
         dispatch(clearSummaryData());
         navigate("/");
       }
@@ -46,7 +38,7 @@ function App() {
   }, []);
 
   return (
-      <div className='bg-cyan-100 h-screen'>
+      <div className='bg-red-100 h-screen'>
         <Header />
         <Outlet />
       </div>

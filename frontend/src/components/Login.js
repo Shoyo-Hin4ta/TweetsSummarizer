@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from '../utils/firebase';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from '../utils/userSlice';
 import { useNavigate } from 'react-router-dom';
-import { clearSummaryData, hideShowResults } from '../utils/tweetsSlice';
+import { clearSummaryData, setCreateUser } from '../utils/tweetsSlice';
 import axios from 'axios';
 
 const Login = () => {
@@ -13,11 +13,12 @@ const Login = () => {
     const password = useRef(null);
     const name = useRef(null);
 
+    const clickedStatus = useSelector(store => store.tweets.createUser);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [error, setError] = useState(null);
-    const [createClicked, setCreateClicked] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -26,35 +27,33 @@ const Login = () => {
         console.log(email.current.value);
         console.log(password.current.value);
 
-        if(createClicked){
+        if(clickedStatus){
             createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
             .then((userCredential) => {
                 // Signed up 
+                ;(async() => {
+                    try {
+                        const response = await axios.post('http://localhost:8000/api/create_user/' + userCredential.user.email);
+                        console.log(response);
+                        navigate("/");
+                    } catch (error) {
+                        console.log(error);
+                    }
+                })();
                 const user = userCredential.user;
                 // ...
                 console.log(user)
+                
                 updateProfile(user, {
                     displayName: name.current.value,
                   }).then(() => {
                     // Profile updated!
-                    const {uid, email, displayName} = auth.currentUser;
+                    const {uid, email, displayName} = user;
                     
                     //make a call to update the database to update the email of the user.
 
                     dispatch(addUser({uid, email, displayName}));
                     dispatch(clearSummaryData());
-                    dispatch(hideShowResults());
-                    axios.post('/user', {
-                        firstName: 'Fred',
-                        lastName: 'Flintstone'
-                      })
-                      .then(function (response) {
-                        console.log(response);
-                      })
-                      .catch(function (error) {
-                        console.log(error);
-                      });
-                    navigate("/")
                   }).catch((error) => {
                     // An error occurred
                     // ...
@@ -71,16 +70,14 @@ const Login = () => {
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-                const {uid, email, displayName} = auth.currentUser;
+                const {uid, email, displayName} = user;
                     
-                //make a call to update the database to update the email of the user.
 
                 dispatch(addUser({uid, email, displayName}));
-
-                navigate("/");
                 dispatch(clearSummaryData());
-                dispatch(hideShowResults());
 
+                
+                navigate("/");
 
             })
             .catch((error) => {
@@ -95,19 +92,19 @@ const Login = () => {
     }
 
     const handleCreate= () => {
-        setCreateClicked(!createClicked);
+        dispatch(setCreateUser());
     }
 
 
   return (
     <div className='border border-violet-500 flex justify-center items-center mt-48'>
         <form className='bg-blue-500 opacity-80 rounded-lg shadow-lg  flex flex-col justify-center w-[350px] h-[400px] items-center border border-red-400'>
-            <label className='text-white text-2xl mb-10'>{createClicked ? "SignUp" : "Login"}</label>
-            {createClicked && <input ref={name} className= "m-2 p-2 shadow-lg rounded-lg w-[280px]" type="text" placeholder = 'Enter Name' />}
+            <label className='text-white text-2xl mb-10'>{clickedStatus ? "SignUp" : "Login"}</label>
+            {clickedStatus && <input ref={name} className= "m-2 p-2 shadow-lg rounded-lg w-[280px]" type="text" placeholder = 'Enter Name' />}
             <input ref={email} className= "m-2 p-2 shadow-lg rounded-lg w-[280px]" type="text" placeholder = 'Enter Email' />
             <input ref={password} className= "m-2 p-2 shadow-lg rounded-lg w-[280px]" type="password" placeholder= 'Enter Password' />
-            <button onClick={handleSubmit} className='bg-slate-200 m-2 px-4 py-2 shadow-lg rounded-lg w-[280px]'> {createClicked ? "Create Account" : "Submit"} </button>
-            <label onClick={handleCreate} className='text-sm text-white font-semibold cursor-pointer'> Don't have an account? Create </label>
+            <button onClick={handleSubmit} className='bg-slate-200 m-2 px-4 py-2 shadow-lg rounded-lg w-[280px]'> {clickedStatus ? "Create Account" : "Submit"} </button>
+            <label onClick={handleCreate} className='mt-4 text-sm text-white font-semibold cursor-pointer'> {clickedStatus ? "Have an account! Login":"Don't have an account? Create"} </label>
             <label className='text-white text-1xl mt-4'>{error}</label>
         </form>
     </div>

@@ -1,41 +1,53 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import axios from "axios";
 import Results from './Results';
 import  { useDispatch, useSelector } from 'react-redux';
-import { addTweets, changeShowResults } from '../utils/tweetsSlice';
-import { addSummary,addSummaryUsername } from '../utils/tweetsSlice';
+import { userSummaryData, userTwitterUsername, addSummary,addSummaryUsername, setIsLoading } from '../utils/tweetsSlice';
 import openAPI from '../utils/openAPI';
 import { auth } from '../utils/firebase';
 
 const Summarize = () => {
-
-  console.log("start");
-
+  console.log("Page rendering ");
   const dispatch = useDispatch();
-
   const twitterUsername = useRef(null);
 
-  // const data = useSelector(store => store.tweets.data);
-  // console.log("getting twitter array data ");
+  const summaryData = useSelector(store => store.tweets.summaryData);
+  const user = useSelector(store => store.user)
+  const loading = useSelector(store => store.tweets.isLoading);
 
-  const btnStatus = useSelector(store => store.tweets.showResults);
+  useEffect((() => {
+    console.log(user);
+    console.log("summarize mounted");
+    const getUserData = async() => {
+          
+      const response = await axios.get("http://localhost:8000/api/get_all_tweets/"+auth.currentUser.email);
+      dispatch(userSummaryData(response.data.tweetsList.reverse()));
+      dispatch(userTwitterUsername(response.data.twitterUsername.reverse()));
+      console.log(response.data.tweetsList);
+      console.log(response.data.twitterUsername);
 
-  const summaryData = useSelector(store => store.tweet.summaryData);
+    }
+    console.log(user);
+    if(user){
+      getUserData();
+    }
+  }),[user]);
 
   const handleClick = async() => {
+
+      dispatch(setIsLoading(true));
 
       const valueToSend = twitterUsername.current.value + "_5";
       console.log("http://localhost:8000/api/get_tweets/"+ valueToSend);
   
       const response = await axios.get("http://localhost:8000/api/get_tweets/"+ valueToSend);
-  
+      // console.log(response);
+
       //save this data in store;
       // console.log(response.data);
       // dispatch(addTweets(response.data));
 
       const twitterData = response.data
-      console.log("tweet data added in store - state updated");
-
       const tweetsTextArr = twitterData.map((tweet) => {
         return tweet.Text;
       })
@@ -47,37 +59,43 @@ const Summarize = () => {
       const prompt = "These are 5 recent tweets of the twitter user "+ twitterUsername  +" : "+ unsummarizedText +". Summarize them";
       const summarizedData  = await openAPI(prompt);
 
-      console.log("got response from open api");
-      dispatch(addSummaryUsername(twitterUsername.current.value))
-      dispatch(addSummary(summarizedData))
-
-      console.log("summary added - state updated");
-
-      // if user is logged in
-
-     const response_from_db = await axios.post('http://localhost:8000/api/get_tweets/', {
+    // if user is logged in
+    if(auth.currentUser)
+    {
+     const response_from_db = await axios.put('http://localhost:8000/api/add_tweets',{
         email: auth.currentUser.email,
         twitterUsername: twitterUsername.current.value,
-        tweetsList: summarizedData
+        summary: summarizedData
      });
-
-    
-      
-
-      dispatch(changeShowResults());
+     dispatch(userSummaryData(response_from_db.data.tweetsList.reverse()));
+     dispatch(userTwitterUsername(response_from_db.data.twitterUsername.reverse()));
+     console.log("store_updated - page rerenders again");
+     dispatch(setIsLoading(false))
+    }
+    else{
+      dispatch(addSummaryUsername(twitterUsername.current.value));
+      dispatch(addSummary(summarizedData));
+      dispatch(setIsLoading(false));
+    }
   }
 
   return (
     <>
     <div className='border border-red-300 mt-36 w-4/5 flex flex-col items-center'>
-        <div className='text-4xl m-2 mb-9'>Get Tweets Summary</div>
-        <input ref = {twitterUsername} className= "w-2/5 p-4 rounded-lg" type= "text" placeholder='Enter the twitter username'/>
-        <button onClick={handleClick} className='m-2 bg-blue-400 p-3 w-32 rounded-lg mt-7'> Summarize ! </button>
+        <div class="w-max m-4 mb-6 border border-red-400">
+            <h1 class="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-white pr-5 text-5xl font-bold text-black">Summarize Tweets</h1>
+        </div>        
+            <input ref = {twitterUsername} className= "w-2/5 p-4 rounded-lg" type= "text" placeholder='Enter the twitter username'/>
+            <button onClick={handleClick} className='m-2 bg-blue-400 p-3 w-32 rounded-lg mt-7'> Summarize ! </button>
     </div>
-    {console.log("reached till result box")}
-    {summaryData && <Results twitterUsername = {twitterUsername.current.value} />}
+    {loading && 
+      <div class="mt-10 px-6 py-4 text-sm font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">Scraping and summarizing the data...</div>
+    }
+    {summaryData.length!==0 ? <Results /> : null}
     </>
   )
 }
 
 export default Summarize
+
+

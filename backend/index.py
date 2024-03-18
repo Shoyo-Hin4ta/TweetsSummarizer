@@ -4,7 +4,6 @@ from logger import Logger
 import json
 
 from tweet import Tweet
-from excel import Excel
 
 log = Logger()
 
@@ -29,7 +28,6 @@ def scrape_tweets(profile_url: str, num_tweets: int):
         data = profile_search(driver, profile_url, num_tweets)
 
         log.warning("Saving...")
-        Excel(data, conf["output_form"])
 
         return {"success": True}
 

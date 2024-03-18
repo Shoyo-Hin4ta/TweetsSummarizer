@@ -97,8 +97,8 @@ const Login = () => {
 
 
   return (
-    <div className='border border-violet-500 flex justify-center items-center mt-48'>
-        <form className='bg-blue-500 opacity-80 rounded-lg shadow-lg  flex flex-col justify-center w-[350px] h-[400px] items-center border border-red-400'>
+    <div className='flex justify-center items-center mt-48'>
+        <form className='bg-blue-500 opacity-80 rounded-lg shadow-lg  flex flex-col justify-center w-[350px] h-[400px] items-center'>
             <label className='text-white text-2xl mb-10'>{clickedStatus ? "SignUp" : "Login"}</label>
             {clickedStatus && <input ref={name} className= "m-2 p-2 shadow-lg rounded-lg w-[280px]" type="text" placeholder = 'Enter Name' />}
             <input ref={email} className= "m-2 p-2 shadow-lg rounded-lg w-[280px]" type="text" placeholder = 'Enter Email' />

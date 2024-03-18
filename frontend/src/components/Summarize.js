@@ -37,7 +37,7 @@ const Summarize = () => {
 
       dispatch(setIsLoading(true));
 
-      const valueToSend = twitterUsername.current.value + "_5";
+      const valueToSend = twitterUsername.current.value;
       console.log("http://localhost:8000/api/get_tweets/"+ valueToSend);
   
       const response = await axios.get("http://localhost:8000/api/get_tweets/"+ valueToSend);
@@ -81,15 +81,15 @@ const Summarize = () => {
 
   return (
     <>
-    <div className='border border-red-300 mt-36 w-4/5 flex flex-col items-center'>
-        <div class="w-max m-4 mb-6 border border-red-400">
-            <h1 class="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-white pr-5 text-5xl font-bold text-black">Summarize Tweets</h1>
+    <div className='mt-36 w-4/5 flex flex-col items-center'>
+        <div className="w-max m-4 mb-6">
+            <h1 className="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-white pr-5 text-5xl font-bold text-black">Summarize Tweets</h1>
         </div>        
             <input ref = {twitterUsername} className= "w-2/5 p-4 rounded-lg" type= "text" placeholder='Enter the twitter username'/>
             <button onClick={handleClick} className='m-2 bg-blue-400 p-3 w-32 rounded-lg mt-7'> Summarize ! </button>
     </div>
     {loading && 
-      <div class="mt-10 px-6 py-4 text-sm font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">Scraping and summarizing the data...</div>
+      <div class="mt-8 px-6 py-4 text-base font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">Scraping and summarizing the data...</div>
     }
     {summaryData.length!==0 ? <Results /> : null}
     </>

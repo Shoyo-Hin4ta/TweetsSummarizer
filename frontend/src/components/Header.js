@@ -19,14 +19,13 @@ const Header = () => {
       signOut(auth).then(() => {
           // Sign-out successful.
           console.log("signed out");
-          dispatch(clearSummaryData());
       }).catch((error) => {
         // An error happened.
       });
   }
 
   const handleClick = () => {
-    setBackToBody(!backToBody)
+    setBackToBody(true)
   }
 
   return (
@@ -36,10 +35,16 @@ const Header = () => {
         </div>
         <div className='flex cursor-pointer'>
           <div className='m-2 '>
-              <Link to="/login" onClick={handleClick} className='m-2'>
-                {user ? `Hi, ${user.displayName}` : (clickedStatus ? "Register" : "Sign In")}
+          <Link to="/" className='m-2' onClick={() => {if(clickedStatus){dispatch(setCreateUser())}}}>Home</Link>
+
+              <Link to="/login"  className='m-2'>
+                {user ? (
+                    <span>
+                        Hi, {user.displayName} 
+                        <button className = "ml-3" onClick={handleSignOut}>SignOut</button>
+                    </span>)  : 
+                    (clickedStatus ? <span >Register</span> : <span onClick={handleClick}>Sign In</span> )}
               </Link>
-              {backToBody && <Link to="/" className='m-2'>Home</Link>}
           </div>
         </div>
         

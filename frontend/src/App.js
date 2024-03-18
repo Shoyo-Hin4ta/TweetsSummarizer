@@ -42,7 +42,6 @@ function App() {
         <Header />
         <Outlet />
       </div>
-    
   );
 
 }

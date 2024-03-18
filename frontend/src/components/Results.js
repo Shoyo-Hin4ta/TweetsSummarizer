@@ -10,6 +10,7 @@ const Results = () => {
   const summarizedDataArr = useSelector(store => store.tweets.summaryData);
   const usernameArr = useSelector(store => store.tweets.summaryUsername);
 
+  
   useEffect(() => {
     console.log("result mounted");
   },[]);
@@ -18,11 +19,11 @@ const Results = () => {
   return (
       <>
       {console.log("inside result")}
-      <div>
-        <div className='mt-5 text-2xl text-center'>Summarized Tweets</div>
-        <div className='border border-black mt-1 w-screen text-center text-black p-4 flex flex-wrap justify-center '>
+      <div className=''>
+        <div className='mt-5 text-2xl text-center font-bold'>Summarized Tweets</div>
+        <div className='border mt-2 w-screen text-center text-black p-8 flex flex-wrap justify-center bg-red-100  gap-2'>
           {summarizedDataArr.map((data,index) => (
-            <div key={index} className='flex flex-col h-[350px] w-[300px] text-black bg-white rounded-lg shadow-lg overflow-scroll p-4 m-2'>
+            <div key={index} className='flex flex-col h-[350px] w-2/12  text-black bg-white rounded-lg shadow-lg overflow-scroll p-4'>
               <div className='text-center font-bold p-2'>Summary for {usernameArr[index]} </div>
               <div className='text-left p-2'>{data}</div>
             </div>))}

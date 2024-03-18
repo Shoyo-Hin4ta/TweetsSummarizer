@@ -40,8 +40,8 @@ async def create_user(email : str):
 @app.get("/api/get_tweets/{profile_tweets}")
 async def get_tweets(profile_tweets: str):
     try:
-        name, tweets = profile_tweets.split('_')
-        tweets = int(tweets)
+        name = profile_tweets
+        tweets = 5
 
         scrape_tweets(name, tweets)
 

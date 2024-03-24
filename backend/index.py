@@ -2,6 +2,12 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from logger import Logger
 import json
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+from selenium.common.exceptions import TimeoutException
 
 from tweet import Tweet
 
@@ -30,13 +36,21 @@ def scrape_tweets(profile_url: str, num_tweets: int):
         log.warning("Saving...")
 
         return {"success": True}
+    
+    except TimeoutException:
+        log.warning("Timeout occurred while scraping tweets.")
+        return {"error": "Timeout occurred while scraping tweets. Please try again later."}
+
 
     except Exception as e:
         log.warning(f"An error occurred: {str(e)}")
         return {"error": str(e)}
 
     finally:
-        driver.quit()
+        try:
+            driver.quit()
+        except:
+            pass
 
 
 def profile_search(
@@ -44,6 +58,7 @@ def profile_search(
         profile_url : str, 
         num_tweets : int
 ):
+    start_time = time.time()
     # url = input("Enter profile URL: ")
     # num = int(input("Enter the required number of tweets: "))
 
@@ -51,11 +66,16 @@ def profile_search(
     driver.get("https://twitter.com/"+ profile_url)
 
     log.warning("Fetching...")
+
     Ad = []
     results = []
     while len(results) < num:
-        tweet = Tweet(driver, Ad)
+        # elapsed_time = time.time() - start_time
+        # if elapsed_time >= 60:
+        #     log.warning("Time limit exceeded. Quitting driver.")
+        #     break
 
+        tweet = Tweet(driver, Ad)
         data = {}
 
         data["URL"] = tweet.get_url()

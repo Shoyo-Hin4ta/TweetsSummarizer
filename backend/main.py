@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from index import scrape_tweets
+from selenium.common.exceptions import TimeoutException
+
 from model import(
     Tweets, 
     UpdateTweets) 
@@ -41,13 +43,18 @@ async def create_user(email : str):
 async def get_tweets(profile_tweets: str):
     try:
         name = profile_tweets
-        tweets = 5
+        tweets = 10
 
         scrape_tweets(name, tweets)
 
         with open("../backend/files/temp.json", "r") as file:
             data = json.load(file)
         return data
+    
+    
+    except TimeoutException:
+        return {"error": "Timeout occurred while fetching tweets."}
+    
     except Exception as e:
         return {"error": str(e)}
     

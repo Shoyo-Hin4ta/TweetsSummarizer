@@ -2,12 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from logger import Logger
 import json
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import time
-from selenium.common.exceptions import TimeoutException
 
 from tweet import Tweet
 
@@ -36,10 +31,6 @@ def scrape_tweets(profile_url: str, num_tweets: int):
         log.warning("Saving...")
 
         return {"success": True}
-    
-    except TimeoutException:
-        log.warning("Timeout occurred while scraping tweets.")
-        return {"error": "Timeout occurred while scraping tweets. Please try again later."}
 
 
     except Exception as e:
@@ -47,10 +38,7 @@ def scrape_tweets(profile_url: str, num_tweets: int):
         return {"error": str(e)}
 
     finally:
-        try:
-            driver.quit()
-        except:
-            pass
+        driver.quit()
 
 
 def profile_search(
@@ -70,10 +58,6 @@ def profile_search(
     Ad = []
     results = []
     while len(results) < num:
-        # elapsed_time = time.time() - start_time
-        # if elapsed_time >= 60:
-        #     log.warning("Time limit exceeded. Quitting driver.")
-        #     break
 
         tweet = Tweet(driver, Ad)
         data = {}

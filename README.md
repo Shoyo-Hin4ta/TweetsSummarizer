@@ -17,8 +17,3 @@ And the frontend is build using React, where the user has the liberty to sign up
 
 The main challenges was working with different states, lots of states are being managed. So, got better with the states in react and This is the first project where, I worked with python in the backend, took some documentation
 and then it was smooth sailing.
-
-
-
-
-# Tweets Summarizer

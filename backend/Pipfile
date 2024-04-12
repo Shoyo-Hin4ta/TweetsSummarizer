@@ -10,6 +10,7 @@ motor = "*"
 selenium = "*"
 termcolor = "*"
 xlwt = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

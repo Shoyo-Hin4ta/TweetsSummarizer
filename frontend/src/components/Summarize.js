@@ -7,7 +7,6 @@ import openAPI from '../utils/openAPI';
 import { auth } from '../utils/firebase';
 
 const Summarize = () => {
-  console.log("Page rendering ");
   const dispatch = useDispatch();
   const twitterUsername = useRef(null);
 
@@ -16,18 +15,13 @@ const Summarize = () => {
   const loading = useSelector(store => store.tweets.isLoading);
 
   useEffect((() => {
-    console.log(user);
-    console.log("summarize mounted");
     const getUserData = async() => {
           
-      const response = await axios.get("http://localhost:8000/api/get_all_tweets/"+auth.currentUser.email);
+      const response = await axios.get(process.env.REACT_APP_BACKEND_URL+"/get_all_tweets/"+auth.currentUser.email);
       dispatch(userSummaryData(response.data.tweetsList.reverse()));
       dispatch(userTwitterUsername(response.data.twitterUsername.reverse()));
-      console.log(response.data.tweetsList);
-      console.log(response.data.twitterUsername);
 
     }
-    console.log(user);
     if(user){
       getUserData();
     }
@@ -38,9 +32,8 @@ const Summarize = () => {
       dispatch(setIsLoading(true));
 
       const valueToSend = twitterUsername.current.value;
-      console.log("http://localhost:8000/api/get_tweets/"+ valueToSend);
   
-      const response = await axios.get("http://localhost:8000/api/get_tweets/"+ valueToSend);
+      const response = await axios.get(process.env.REACT_APP_BACKEND_URL+"/get_tweets/"+ valueToSend);
       // console.log(response);
 
       //save this data in store;
@@ -62,14 +55,13 @@ const Summarize = () => {
     // if user is logged in
     if(auth.currentUser)
     {
-     const response_from_db = await axios.put('http://localhost:8000/api/add_tweets',{
+     const response_from_db = await axios.put(process.env.REACT_APP_BACKEND_URL+'/add_tweets',{
         email: auth.currentUser.email,
         twitterUsername: twitterUsername.current.value,
         summary: summarizedData
      });
      dispatch(userSummaryData(response_from_db.data.tweetsList.reverse()));
      dispatch(userTwitterUsername(response_from_db.data.twitterUsername.reverse()));
-     console.log("store_updated - page rerenders again");
      dispatch(setIsLoading(false))
     }
     else{
@@ -82,14 +74,14 @@ const Summarize = () => {
   return (
     <>
     <div className='mt-36 w-4/5 flex flex-col items-center'>
-        <div className="w-max m-4 mb-6">
-            <h1 className="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-white pr-5 text-5xl font-bold text-black">Summarize Tweets</h1>
+        <div className="sm:w-max m-4 mb-6 w-3/4">
+            <h1 className="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-white sm:pr-5 p-0 sm:text-5xl text-2xl text-center font-bold text-black">Summarize Tweets</h1>
         </div>        
-            <input ref = {twitterUsername} className= "w-2/5 p-4 rounded-lg" type= "text" placeholder='Enter the twitter username'/>
+            <input ref = {twitterUsername} className= "sm:w-2/5 p-4 w-full rounded-lg" type= "text" placeholder='Enter the twitter username'/>
             <button onClick={handleClick} className='m-2 bg-blue-400 p-3 w-32 rounded-lg mt-7'> Summarize ! </button>
     </div>
     {loading && 
-      <div class="mt-8 px-6 py-4 text-base font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">Scraping and summarizing the data...</div>
+      <div className="mt-8 px-6 py-4 text-base font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">Scraping and summarizing the data...</div>
     }
     {summaryData.length!==0 ? <Results /> : null}
     </>

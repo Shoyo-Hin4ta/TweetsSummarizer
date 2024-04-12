@@ -1,14 +1,13 @@
 from model import (Tweets, UpdateTweets)
 from fastapi import HTTPException
-
+from dotenv import load_dotenv
 # MongoDB
 import motor.motor_asyncio
+import os
 
+load_dotenv()
 
-uri = "mongodb+srv://ritik224:IF5wzBzXzQrvrGNf@cluster0.thmuygd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-
-
-client = motor.motor_asyncio.AsyncIOMotorClient(uri)
+client = motor.motor_asyncio.AsyncIOMotorClient(os.getenv("MONGO_URI"))
 database = client.TweetsSummarizer
 collection = database.tweets
 

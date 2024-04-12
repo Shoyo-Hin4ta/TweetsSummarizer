@@ -3,6 +3,10 @@ from selenium.webdriver.chrome.options import Options
 from logger import Logger
 import json
 import time
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 from tweet import Tweet
 
@@ -15,14 +19,14 @@ def scrape_tweets(profile_url: str, num_tweets: int):
         log.warning("Loading configurations...")
         conf = load_conf()
 
-        if not conf["token"]:
+        if not os.getenv("TWITTER_BEARERTOKEN"):
             log.warning("Please set your access token in './files/conf.json' file")
             log.warning("For more info visit this link: https://youtu.be/uHOz7BSPXCo")
             return {"error": "Access token not set"}
 
         driver = open_driver(conf["headless"], conf["userAgent"])
         driver.get("https://twitter.com/")
-        set_token(driver, conf["token"])
+        set_token(driver, os.getenv("TWITTER_BEARERTOKEN"))
         driver.get("https://twitter.com/")
 
         log.warning("Starting...")

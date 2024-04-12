@@ -18,7 +18,7 @@ const Header = () => {
   const handleSignOut = () => {
       signOut(auth).then(() => {
           // Sign-out successful.
-          console.log("signed out");
+          // console.log("signed out");
       }).catch((error) => {
         // An error happened.
       });
@@ -29,7 +29,7 @@ const Header = () => {
   }
 
   return (
-    <div className='w-screen h-20 bg-cyan-200 flex justify-between items-center'>
+    <div className='w-full h-20 bg-cyan-200 flex justify-between items-center'>
         <div className='m-1'>
           <img className = "h-28" src = {LOGO} alt = "logo" />
         </div>

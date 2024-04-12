@@ -38,7 +38,7 @@ function App() {
   }, []);
 
   return (
-      <div className='bg-red-100 h-screen'>
+      <div className='bg-red-100 h-screen w-screen'>
         <Header />
         <Outlet />
       </div>

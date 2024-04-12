@@ -4,12 +4,12 @@ import json
 from index import scrape_tweets
 from selenium.common.exceptions import TimeoutException
 
+
 from model import(
     Tweets, 
     UpdateTweets) 
 
 app = FastAPI()
-
 
 from database import(
     add_data,

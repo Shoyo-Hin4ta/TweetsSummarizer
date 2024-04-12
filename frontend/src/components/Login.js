@@ -28,13 +28,14 @@ const Login = () => {
         console.log(password.current.value);
 
         if(clickedStatus){
+            setError(null);
             createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
             .then((userCredential) => {
                 // Signed up 
                 ;(async() => {
                     try {
-                        const response = await axios.post('http://localhost:8000/api/create_user/' + userCredential.user.email);
-                        console.log(response);
+                        const response = await axios.post(process.env.REACT_APP_BACKEND_URL+'/create_user/' + userCredential.user.email);
+                        // console.log(response);
                         navigate("/");
                     } catch (error) {
                         console.log(error);
@@ -42,7 +43,7 @@ const Login = () => {
                 })();
                 const user = userCredential.user;
                 // ...
-                console.log(user)
+                // console.log(user)
                 
                 updateProfile(user, {
                     displayName: name.current.value,
@@ -57,6 +58,7 @@ const Login = () => {
                   }).catch((error) => {
                     // An error occurred
                     // ...
+                    setError(error);
                   });
                   
             })
@@ -64,8 +66,10 @@ const Login = () => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 // ..
+                setError(errorMessage);
             });
         }else{
+            setError(null);
             signInWithEmailAndPassword(auth, email.current.value, password.current.value)
             .then((userCredential) => {
                 // Signed in 
@@ -83,6 +87,7 @@ const Login = () => {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+                setError(errorMessage);
             });
         }
 

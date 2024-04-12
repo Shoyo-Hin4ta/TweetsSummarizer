@@ -1,6 +1,8 @@
 # Tweets Summarizer as the name itself is self explanatory XD.
 
-I have built this project using FARM Stack and authentication is done using firebase.
+### The backend is deployed on render and the frontend is on vercel, Since the I am using the free render plan, the responses are a bit slow, please be patient :D. Worry not you will get your summary 
+
+## I have built this project using FARM Stack and authentication is done using firebase.
 
 ### The flow
 

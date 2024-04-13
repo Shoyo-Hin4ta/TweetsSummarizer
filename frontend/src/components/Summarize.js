@@ -77,7 +77,7 @@ const Summarize = () => {
         <div className="sm:w-max m-4 mb-6 w-3/4">
             <h1 className="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-white sm:pr-5 p-0 sm:text-5xl text-2xl text-center font-bold text-black">Summarize Tweets</h1>
         </div>        
-            <input ref = {twitterUsername} className= "sm:w-2/5 p-4 w-full rounded-lg" type= "text" placeholder='Enter the twitter username'/>
+            <input ref = {twitterUsername} className= "sm:w-2/5 p-4 w-full rounded-lg text-sm sm:text-base" type= "text" placeholder='Enter the twitter username without @. It takes time be patient.'/>
             <button onClick={handleClick} className='m-2 bg-blue-400 p-3 w-32 rounded-lg mt-7'> Summarize ! </button>
     </div>
     {loading && 

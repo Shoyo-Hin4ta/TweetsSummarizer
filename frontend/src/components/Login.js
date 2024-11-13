@@ -24,8 +24,8 @@ const Login = () => {
         e.preventDefault();
         
         //validating inputs
-        console.log(email.current.value);
-        console.log(password.current.value);
+        // console.log(email.current.value);
+        // console.log(password.current.value);
 
         if(clickedStatus){
             setError(null);

@@ -1,7 +1,6 @@
 from model import (Tweets, UpdateTweets)
 from fastapi import HTTPException
 from dotenv import load_dotenv
-# MongoDB
 import motor.motor_asyncio
 import os
 

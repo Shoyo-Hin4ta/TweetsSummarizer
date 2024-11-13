@@ -2,15 +2,36 @@
 from twscrape import API, gather
 from typing import Dict, List, Union
 from fastapi import HTTPException
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables
 
 async def initialize_twitter_api() -> API:
     """Initialize and set up the Twitter API with credentials"""
     try:
-        api = API()  # Use default accounts.db
+        api = API()  
         
-        # For newer versions, we can just try to use the API
-        # If there are no accounts or they're not logged in,
-        # the subsequent operations will fail appropriately
+        try:
+            accounts = await api.pool.list_accounts()
+            if not accounts:
+                await api.pool.add_account(
+                    username=os.getenv("TWITTER_USERNAME"),
+                    password=os.getenv("TWITTER_PASSWORD"),
+                    email=os.getenv("TWITTER_EMAIL"),
+                    email_password=os.getenv("TWITTER_EMAIL_PASSWORD")
+                )
+                await api.pool.login_all()
+        except Exception:
+            # If we can't list accounts, try adding new ones
+            await api.pool.add_account(
+                username=os.getenv("TWITTER_USERNAME"),
+                password=os.getenv("TWITTER_PASSWORD"),
+                email=os.getenv("TWITTER_EMAIL"),
+                email_password=os.getenv("TWITTER_EMAIL_PASSWORD")
+            )
+            await api.pool.login_all()
+            
         return api
         
     except Exception as e:
@@ -37,7 +58,7 @@ async def scrape_tweets(username: str, tweet_count: int = 10) -> Dict[str, Union
         except Exception as e:
             raise HTTPException(
                 status_code=404,
-                detail=f"Failed to fetch user {username}. Make sure you have added and logged in Twitter accounts using twscrape CLI."
+                detail=f"Failed to fetch user {username}. Error: {str(e)}"
             )
         
         # Fetch tweets

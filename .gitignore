@@ -6,6 +6,11 @@
 .pnp.js
 
 /backend/.env
+/backend/accounts.db
+/backend/accounts.txt
+/backend/__pycache__/
+/backend/*.pyc
+
 
 /frontend/.env
 
